@@ -3,6 +3,7 @@ package com.eilas.dao.impl
 import com.eilas.dao.IUserDao
 import com.eilas.entity.Student
 import com.eilas.entity.User
+import com.eilas.servlet.LoginServlet
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -62,5 +63,4 @@ fun main() {
     var userDaoImpl = UserDaoImpl()
     userDaoImpl.save(student)
     userDaoImpl.select("222").let { user -> userDaoImpl.delete(user) }
-
 }

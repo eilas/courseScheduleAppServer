@@ -2,13 +2,15 @@
   <artifact type="exploded-war" name="kotlin_servlet:war exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/kotlin_servlet_war_exploded</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="courseScheduleAppServer/web/Web" />
+      <element id="javaee-facet-resources" facet="CourseScheduleAppServer/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="courseScheduleAppServer" />
+          <element id="module-output" name="CourseScheduleAppServer" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="KotlinJavaRuntime" />
+          <element id="library" level="application" name="mysql-connector-java-8.0.17" />
+          <element id="library" level="application" name="com.google.code.gson:gson:2.8.6" />
         </element>
       </element>
     </root>
