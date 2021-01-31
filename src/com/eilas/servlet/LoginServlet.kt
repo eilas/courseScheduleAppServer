@@ -10,15 +10,15 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @WebServlet("/login")
-class LoginServlet : HttpServlet() {
+open class LoginServlet : HttpServlet() {
 
     protected data class Result(val result: Status) {
         enum class Status(i: Int) {
-            OK(0), pwdError(1), noUser(2)
+            OK(0), pwdError(1), noUser(2), otherError(3)
         }
     }
 
-    private val gson: Gson = Gson()
+    protected val gson: Gson = Gson()
 
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         var jsonObject = JsonParser().parse(request.reader.readLine()).asJsonObject
