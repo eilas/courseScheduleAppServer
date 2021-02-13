@@ -1,6 +1,7 @@
 package com.eilas.dao.impl
 
 import com.eilas.dao.IUserDao
+import com.eilas.dao.SQLHelp.connection
 import com.eilas.entity.Student
 import com.eilas.entity.User
 import com.eilas.servlet.LoginServlet
@@ -8,19 +9,6 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 class UserDaoImpl : IUserDao {
-
-    companion object {
-        lateinit var connection: Connection
-    }
-
-    init {
-        Class.forName("com.mysql.cj.jdbc.Driver")
-        connection = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/course_schedule?characterEncoding=utf-8&serverTimezone=GMT",
-            "root",
-            "123456"
-        )
-    }
 
     override fun save(user: User) {
         if (user is Student)
