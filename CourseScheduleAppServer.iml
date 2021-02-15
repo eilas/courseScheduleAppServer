@@ -23,5 +23,6 @@
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" name="mysql-connector-java-8.0.17" level="application" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.6" level="application" />
+    <orderEntry type="library" name="commons-pool2-2.9.0" level="project" />
   </component>
 </module>

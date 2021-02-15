@@ -11,6 +11,7 @@
           <element id="library" level="project" name="KotlinJavaRuntime" />
           <element id="library" level="application" name="mysql-connector-java-8.0.17" />
           <element id="library" level="application" name="com.google.code.gson:gson:2.8.6" />
+          <element id="library" level="project" name="commons-pool2-2.9.0" />
         </element>
       </element>
     </root>
