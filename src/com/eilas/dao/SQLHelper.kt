@@ -16,7 +16,7 @@ class SQLHelper {
     }
 
     var connection: Connection = DriverManager.getConnection(
-        "jdbc:mysql://localhost:3306/course_schedule?characterEncoding=utf-8&serverTimezone=GMT",
+        "jdbc:mysql://localhost:3306/course_schedule?characterEncoding=utf-8&serverTimezone=GMT%2B8",
         "root",
         "123456"
     )

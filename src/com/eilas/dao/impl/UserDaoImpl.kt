@@ -15,10 +15,10 @@ class UserDaoImpl : IUserDao {
         objectPool.borrowObject().apply {
             if (user is Student)
                 connection.createStatement()
-                    .executeUpdate("insert into student(student_id, name, sex, password) values (${user.id},'${user.name}','${user.sex}','${user.pwd}');")
+                    .executeUpdate("insert into student(student_id, name, sex, password) values ('${user.id}','${user.name}','${user.sex}','${user.pwd}');")
             else
                 connection.createStatement()
-                    .executeUpdate("insert into teacher(teacher_id, name, sex) values (${user.id},'${user.name}','${user.sex}');")
+                    .executeUpdate("insert into teacher(teacher_id, name, sex) values ('${user.id}','${user.name}','${user.sex}');")
 
             objectPool.returnObject(this)
         }
@@ -32,7 +32,7 @@ class UserDaoImpl : IUserDao {
 
     override fun select(id: String): User =
         objectPool.borrowObject().let { sqlHelper ->
-            sqlHelper.connection.createStatement().executeQuery("select * from student where student_id=$id;")
+            sqlHelper.connection.createStatement().executeQuery("select * from student where student_id='$id';")
                 .let {
                     it.first()
 

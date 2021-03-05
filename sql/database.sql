@@ -1,4 +1,4 @@
-# drop database course_schedule;
+drop database course_schedule;
 create database course_schedule;
 use course_schedule;
 
@@ -19,12 +19,13 @@ create table teacher
     sex        enum ('MALE','FEMALE') not null
 ) engine = InnoDB;
 
-# 课程里添加编号，便于识别同学？
+# 课程通过名、地点和时间识别上同一节课的同学？
 create table course
 (
     course_id           int unsigned auto_increment primary key,
     name                varchar(16)      not null,
     info                text,
+    location            tinytext         not null,
 
     str_week            tinyint unsigned not null,
     end_week            tinyint unsigned not null,
@@ -45,7 +46,7 @@ create table course_record
     id         int unsigned primary key auto_increment,
     course_id  int unsigned not null,
     student_id varchar(9)   not null,
-    teacher_id int unsigned not null,
+    teacher_id int unsigned ,
     foreign key course_id_key (course_id) references course (course_id),
     foreign key student_id_key (student_id) references student (student_id),
     foreign key teacher_id_key (teacher_id) references teacher (teacher_id)

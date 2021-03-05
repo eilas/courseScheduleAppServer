@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @WebServlet("/register")
-class RegisterServlet : LoginServlet() {
+class RegisterServlet : BaseServlet() {
 
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         var jsonObject = JsonParser().parse(request.reader.readLine()).asJsonObject
@@ -33,6 +33,7 @@ class RegisterServlet : LoginServlet() {
         }.onSuccess {
             response.writer.write(gson.toJson(Result(Result.Status.OK)))
         }.onFailure {
+            it.printStackTrace()
             response.writer.write(gson.toJson(Result(Result.Status.otherError)))
         }
         response.writer.close()

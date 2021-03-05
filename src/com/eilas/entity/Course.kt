@@ -4,9 +4,10 @@ import java.util.*
 
 //年、月、日、时、分、秒、周几
 data class Course(
-    val id: String,
+    var id: Int?,
     val name: String,
     val info: String = "",
+    val location:String,
     val strWeek: Int = 0,
     val endWeek: Int = 0,
     val strTime1: Date,
