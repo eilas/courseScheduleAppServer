@@ -96,7 +96,7 @@ class CourseDaoImpl : ICourseDao {
 
         return objectPool.borrowObject().let { sqlHelper ->
             sqlHelper.connection.createStatement()
-                .executeQuery(("select course_id,name,location,odd_week_str_time1," +
+                .executeQuery(("select course_id,name,location,str_week,odd_week_str_time1," +
                         "odd_week_end_time1," +
                         "odd_week_str_time2," +
                         "odd_week_end_time2 " +
@@ -108,17 +108,35 @@ class CourseDaoImpl : ICourseDao {
                             this.replace("odd_week", "even_week")
                     }).let {
                     val coureList = ArrayList<Course>()
-                    val dateFormat = SimpleDateFormat()
                     while (it.next()) {
+                        val strWeek = it.getInt(4)
                         coureList.add(
                             Course(
                                 id = it.getInt(1),
                                 name = it.getString(2),
                                 location = it.getString(3),
-                                strTime1 = dateFormat.parse(it.getString(4)),
-                                endTime1 = dateFormat.parse(it.getString(5)),
-                                strTime2 = dateFormat.parse(it.getString(6)),
-                                endTime2 = dateFormat.parse(it.getString(7))
+                                strTime1 = Calendar.getInstance().apply {
+                                    time = Date(it.getTimestamp(5).time)
+                                    println("old course time="+this.time)
+                                    add(Calendar.DATE, (week - strWeek) * 7)
+                                    println("new course time="+this.time)
+                                }.time,
+                                endTime1 = Calendar.getInstance().apply {
+                                    time = Date(it.getTimestamp(6).time)
+                                    add(Calendar.DATE, (week - strWeek) * 7)
+                                }.time,
+                                strTime2 = it.getTimestamp(7)?.let {
+                                    Calendar.getInstance().apply {
+                                        time = Date(it.time)
+                                        add(Calendar.DATE, (week - strWeek) * 7)
+                                    }.time
+                                },
+                                endTime2 = it.getTimestamp(8)?.let {
+                                    Calendar.getInstance().apply {
+                                        time = Date(it.time)
+                                        add(Calendar.DATE, (week - strWeek) * 7)
+                                    }.time
+                                }
                             )
                         )
                     }

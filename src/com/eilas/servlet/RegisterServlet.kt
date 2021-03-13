@@ -31,10 +31,10 @@ class RegisterServlet : BaseServlet() {
                 )
             )
         }.onSuccess {
-            response.writer.write(gson.toJson(Result(Result.Status.OK)))
+            response.writer.write(gson.toJson(Result.OK))
         }.onFailure {
             it.printStackTrace()
-            response.writer.write(gson.toJson(Result(Result.Status.otherError)))
+            response.writer.write(gson.toJson(Result.otherError))
         }
         response.writer.close()
     }

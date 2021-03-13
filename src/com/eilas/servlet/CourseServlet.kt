@@ -15,13 +15,14 @@ import javax.servlet.http.HttpServletResponse
 class CourseServlet : BaseServlet() {
 
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
+        response.characterEncoding = "utf-8"
         request.let {
             val search = it.getParameter("search").toBoolean()
             val all = it.getParameter("all").toBoolean()
             val courseDaoImpl = CourseDaoImpl()
             val jsonParser = JsonParser()
 
-            if (search && all) {//查询某周全部课程
+            if (search && all) {//查询某周全部课程粗略信息
                 val id = jsonParser.parse(it.reader.readLine()).asJsonObject["id"].asString
                 courseDaoImpl.selectAll(id, it.getParameter("week").toInt()).let {
                     response.writer.write(gson.toJson(it))
@@ -56,10 +57,11 @@ class CourseServlet : BaseServlet() {
                                     strTime1 = simpleDateFormat.parse(course["courseStrTime1"].asString),
                                     endTime1 = simpleDateFormat.parse(course["courseEndTime1"].asString)
                                 ).also {
-                                    it.id=save(it)
+                                    it.id = save(it)
                                 }, user["id"].asString
                             )
                         }
+                        response.writer.write(gson.toJson(Result.OK))
                     }
                 }
             }

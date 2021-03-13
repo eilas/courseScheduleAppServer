@@ -19,14 +19,14 @@ open class LoginServlet : BaseServlet() {
             UserDaoImpl().select(jsonObject["id"].asString).let {
                 if (it is Student && jsonObject["pwd"].asString.equals(it.pwd))
 //                    println(Gson().toJson(mapOf("result" to "OK")))
-                    response.writer.write(gson.toJson(Result(Result.Status.OK)))
-                else throw Exception(Result.Status.pwdError.toString())
+                    response.writer.write(gson.toJson(Result.OK))
+                else throw Exception(Result.pwdError.toString())
             }
         }.onFailure {
-            if (it.message.equals(Result.Status.pwdError.toString()))
-                response.writer.write(gson.toJson(Result(Result.Status.pwdError)))
+            if (it.message.equals(Result.pwdError.toString()))
+                response.writer.write(gson.toJson(Result.pwdError))
             else
-                response.writer.write(gson.toJson(Result(Result.Status.noUser)))
+                response.writer.write(gson.toJson(Result.noUser))
         }
         response.writer.close()
     }
