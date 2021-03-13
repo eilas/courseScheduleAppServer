@@ -13,7 +13,7 @@ class CourseDaoImpl : ICourseDao {
     private val objectPool = SQLHelperPoolFactory.getPool()
 
     override fun save(course: Course): Int {
-        println("course:$course")
+//        println("course:$course")
 
         val sqlHelper = objectPool.borrowObject()
         sqlHelper.connection.prepareStatement(
@@ -47,18 +47,38 @@ class CourseDaoImpl : ICourseDao {
     }
 
     override fun saveRecord(course: Course, studentId: String) {
-        println("course record:$course")
+//        println("course record:$course")
 
-        objectPool.borrowObject().connection.createStatement()
+        val sqlHelper = objectPool.borrowObject()
+        sqlHelper.connection.createStatement()
             .executeUpdate("insert into course_record(course_id, student_id, teacher_id) values (${course.id},'$studentId',null);")
+        objectPool.returnObject(sqlHelper)
     }
 
     override fun update(course: Course) {
         TODO("Not yet implemented")
     }
 
-    override fun select(courseId: String): Course {
-        TODO("Not yet implemented")
+    override fun select(courseId: Int): Course {
+        val sqlHelper = objectPool.borrowObject()
+        return sqlHelper.connection.createStatement().executeQuery("select * from course where course_id=$courseId;")
+            .let {
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                objectPool.returnObject(sqlHelper)
+                it.first()
+                Course(
+                    it.getInt(1),
+                    it.getString(2),
+                    it.getString(3),
+                    it.getString(4),
+                    it.getInt(5),
+                    it.getInt(6),
+                    dateFormat.parse(it.getString(7)),
+                    dateFormat.parse(it.getString(8)),
+                    it.getString(9)?.let { dateFormat.parse(it) },
+                    it.getString(10)?.let { dateFormat.parse(it) }
+                )
+            }
     }
 
     override fun selectByNameOrAndLocation(vararg coursearg: String): Course {
@@ -67,8 +87,8 @@ class CourseDaoImpl : ICourseDao {
                     "odd_week_str_time2,odd_week_end_time2 from course where name="
         for (i in coursearg.indices) {
             when (i) {
-                0 -> sql += coursearg[i]
-                1 -> sql += "and location=$coursearg[i]"
+                0 -> sql += "'${coursearg[i]}'"
+                1 -> sql += "and location='${coursearg[i]}'"
             }
         }
         sql = "$sql;"
@@ -77,15 +97,15 @@ class CourseDaoImpl : ICourseDao {
             sqlHelper.connection.createStatement().executeQuery(sql).let {
                 it.first()
                 objectPool.returnObject(sqlHelper)
-                val dateFormat = SimpleDateFormat()
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 Course(
                     id = it.getInt(1),
                     name = it.getString(2),
                     location = it.getString(3),
                     strTime1 = dateFormat.parse(it.getString(4)),
                     endTime1 = dateFormat.parse(it.getString(5)),
-                    strTime2 = dateFormat.parse(it.getString(6)),
-                    endTime2 = dateFormat.parse(it.getString(7))
+                    strTime2 = it.getString(6)?.let { dateFormat.parse(it) },
+                    endTime2 = it.getString(7)?.let { dateFormat.parse(it) }
                 )
             }
         }
@@ -117,9 +137,9 @@ class CourseDaoImpl : ICourseDao {
                                 location = it.getString(3),
                                 strTime1 = Calendar.getInstance().apply {
                                     time = Date(it.getTimestamp(5).time)
-                                    println("old course time="+this.time)
+//                                    println("old course time="+this.time)
                                     add(Calendar.DATE, (week - strWeek) * 7)
-                                    println("new course time="+this.time)
+//                                    println("new course time="+this.time)
                                 }.time,
                                 endTime1 = Calendar.getInstance().apply {
                                     time = Date(it.getTimestamp(6).time)
@@ -148,14 +168,34 @@ class CourseDaoImpl : ICourseDao {
     }
 
 
-    override fun delete(course: Course) {
-        TODO("Not yet implemented")
+    override fun delete(course: Course, studentId: String) {
+        if (deleteRecord(course, studentId)) {
+            val sqlHelper = objectPool.borrowObject()
+            sqlHelper.connection.createStatement().executeUpdate("delete from course where course_id=${course.id};")
+            objectPool.returnObject(sqlHelper)
+        }
+    }
+
+    override fun deleteRecord(course: Course, studentId: String): Boolean {
+        val sqlHelper = objectPool.borrowObject()
+        sqlHelper.connection.createStatement().apply {
+            executeUpdate("delete from course_record where course_id=${course.id} and student_id='$studentId';")
+            executeQuery("select count(*) from course_record where course_id=${course.id};").let {
+                objectPool.returnObject(sqlHelper)
+                if (it.next()) {
+                    return it.getInt(1) == 0
+                }
+            }
+        }
+        return false
     }
 }
 
 fun main() {
     val courseDaoImpl = CourseDaoImpl()
-    val time = Calendar.getInstance().time
-    val course = Course(null, "aaa", "aaa", "aaa", 1, 10, time, time, time, time)
-    println(courseDaoImpl.save(course))
+//    val time = Calendar.getInstance().time
+//    val course = Course(null, "aaa", "aaa", "aaa", 1, 10, time, time, time, time)
+//    println(courseDaoImpl.save(course))
+    courseDaoImpl.select(11)
+//    courseDaoImpl.selectByNameOrAndLocation("kdkfk", "6461")
 }
