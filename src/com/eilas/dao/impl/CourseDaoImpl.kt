@@ -111,8 +111,17 @@ class CourseDaoImpl : ICourseDao {
         }
     }
 
+    override fun selectAllDay(studentId: String, week: Int, day: Calendar): ArrayList<Course> {
+        val courseList = selectAllWeek(
+            studentId,
+            week
+        )
+        courseList.removeIf { !(day[Calendar.DATE] == it.strTime1.date || day[Calendar.DATE] == it.strTime2?.date) }
+        return courseList
+    }
 
-    override fun selectAll(studentId: String, week: Int): ArrayList<Course> {
+
+    override fun selectAllWeek(studentId: String, week: Int): ArrayList<Course> {
 
         return objectPool.borrowObject().let { sqlHelper ->
             sqlHelper.connection.createStatement()

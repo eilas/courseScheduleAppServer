@@ -2,12 +2,10 @@ package com.eilas.servlet
 
 import com.eilas.dao.impl.CourseDaoImpl
 import com.eilas.entity.Course
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.text.SimpleDateFormat
+import java.util.*
 import javax.servlet.annotation.WebServlet
-import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -22,15 +20,31 @@ class CourseServlet : BaseServlet() {
             val jsonParser = JsonParser()
             when (action) {
                 "search" -> {
-                    if (it.getParameter("all").toBoolean()) {
+                    val mode = it.getParameter("mode")
+                    if (mode.equals("week")) {
 //                        查询某周全部课程粗略信息
                         val id = jsonParser.parse(it.reader.readLine()).asJsonObject["id"].asString
-                        courseDaoImpl.selectAll(id, it.getParameter("week").toInt()).let {
+                        courseDaoImpl.selectAllWeek(id, it.getParameter("week").toInt()).let {
                             response.writer.write(gson.toJson(it))
                         }
+                    } else if (mode.equals("day")) {
+//                        查询某天课程
+                        val id = jsonParser.parse(it.reader.readLine()).asJsonObject["id"].asString
+                        courseDaoImpl.selectAllDay(
+                            id,
+                            it.getParameter("week").toInt(),
+                            Calendar.getInstance()
+                                .apply { time = SimpleDateFormat("yyyy-MM-dd").parse(it.getParameter("time")) })
+                            .let { response.writer.write(gson.toJson(it)) }
                     } else {
 //                        查询单个课程
-
+                        jsonParser.parse(it.reader.readLine()).asJsonObject.apply {
+                            val userId = this["user"].asJsonObject["id"].asString
+                            val courseId = this["courseId"].asInt
+                            courseDaoImpl.select(courseId).let {
+                                response.writer.write(gson.toJson(it))
+                            }
+                        }
                     }
                 }
                 "save" -> {
