@@ -52,3 +52,4 @@ create table course_record
     foreign key teacher_id_key (teacher_id) references teacher (teacher_id)
 ) engine = InnoDB;
 
+alter table course_record add column additional_info text;

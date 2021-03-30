@@ -4,9 +4,6 @@ import com.eilas.dao.IUserDao
 import com.eilas.dao.SQLHelperPoolFactory
 import com.eilas.entity.Student
 import com.eilas.entity.User
-import com.eilas.servlet.LoginServlet
-import java.sql.Connection
-import java.sql.DriverManager
 
 class UserDaoImpl : IUserDao {
     val objectPool = SQLHelperPoolFactory.getPool()
@@ -50,10 +47,25 @@ class UserDaoImpl : IUserDao {
                 }
         }
 
+    override fun selectClassmate(useId: String, courseId: Int): List<User> {
+        val sqlHelper = objectPool.borrowObject()
+        val arrayList = ArrayList<User>()
+//        在一周多节课的情况下sql语句有问题
+        sqlHelper.connection.createStatement()
+            .executeQuery("select student_id,name,sex from student where student_id !='$useId' and student_id in (select student_id from course_record where course_id=$courseId);")
+            .let {
+                while (it.next()) {
+                    arrayList.add(Student(it.getString(1), it.getString(2), User.Sex.valueOf(it.getString(3)), null))
+                }
+            }
+        objectPool.returnObject(sqlHelper)
+        return arrayList
+    }
+
     override fun delete(user: User) {
         objectPool.borrowObject().apply {
             connection.createStatement()
-                .executeUpdate("delete from student where student_id=${user.id}")
+                .executeUpdate("delete from student where student_id='${user.id}';")
 
             objectPool.returnObject(this)
         }
@@ -61,11 +73,15 @@ class UserDaoImpl : IUserDao {
 }
 
 fun main() {
-    var student = Student("333", "aaaabbb", User.Sex.MALE, "123456")
     var userDaoImpl = UserDaoImpl()
-    userDaoImpl.save(student)
+//    var student = Student("333", "aaaabbb", User.Sex.MALE, "123456")
+//    userDaoImpl.save(student as User)
+
+/*
     userDaoImpl.select("333").let { user ->
         println(user)
         userDaoImpl.delete(user)
     }
+*/
+    println(userDaoImpl.selectClassmate("222", 19))
 }

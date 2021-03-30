@@ -21,7 +21,7 @@ class CourseDaoImpl : ICourseDao {
             Statement.RETURN_GENERATED_KEYS
         ).apply {
             setString(1, course.name)
-            setString(2, course.info)
+            setString(2, /*course.info*/null)
             setString(3, course.location)
             setInt(4, course.strWeek)
             setInt(5, course.endWeek)
@@ -51,7 +51,7 @@ class CourseDaoImpl : ICourseDao {
 
         val sqlHelper = objectPool.borrowObject()
         sqlHelper.connection.createStatement()
-            .executeUpdate("insert into course_record(course_id, student_id, teacher_id) values (${course.id},'$studentId',null);")
+            .executeUpdate("insert into course_record(course_id, student_id, teacher_id,additional_info) values (${course.id},'$studentId',null,'${course.info}');")
         objectPool.returnObject(sqlHelper)
     }
 
@@ -131,7 +131,7 @@ class CourseDaoImpl : ICourseDao {
                         "odd_week_end_time2 " +
                         "from course where course_id in" +
                         " (select course_id from course_record where student_id='$studentId') " +
-                        "and $week between str_week and end_week;")
+                        "and $week between str_week and end_week order by odd_week_str_time1 asc;")
                     .apply {
                         if (week % 2 == 0)
                             this.replace("odd_week", "even_week")

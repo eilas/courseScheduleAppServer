@@ -1,6 +1,6 @@
 package com.eilas.entity
 
-data class Student(override var id: String, override var name: String, override var sex: Sex, var pwd: String) :
+data class Student(override var id: String, override var name: String, override var sex: Sex, var pwd: String?) :
     User() {
 
 }
