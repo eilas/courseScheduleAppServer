@@ -22,12 +22,13 @@ class SQLHelper {
     )
 }
 
-object SQLHelperPoolFactory : PooledObjectFactory<SQLHelper> {
+object SQLHelpers : PooledObjectFactory<SQLHelper> {
     private val genericObjectPool = GenericObjectPool<SQLHelper>(
-        SQLHelperPoolFactory,
+        SQLHelpers,
         GenericObjectPoolConfig<SQLHelper>().apply {
             maxTotal = 16
         })
+
 
     fun getPool(): GenericObjectPool<SQLHelper> = genericObjectPool
 
@@ -48,5 +49,8 @@ object SQLHelperPoolFactory : PooledObjectFactory<SQLHelper> {
 
     }
 
+}
 
+fun main(){
+    println(SQLHelper().connection)
 }

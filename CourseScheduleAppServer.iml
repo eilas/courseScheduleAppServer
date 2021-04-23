@@ -24,5 +24,8 @@
     <orderEntry type="library" name="mysql-connector-java-8.0.17" level="application" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.6" level="application" />
     <orderEntry type="library" name="commons-pool2-2.9.0" level="project" />
+    <orderEntry type="library" name="org.mybatis:mybatis:3.5.6" level="application" />
+    <orderEntry type="library" name="com.rabbitmq:amqp-client:5.12.0" level="application" />
+    <orderEntry type="library" name="org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5" level="application" />
   </component>
 </module>

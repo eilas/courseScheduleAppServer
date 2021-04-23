@@ -9,15 +9,13 @@
 <html>
 <head>
     <title>$Title$</title>
+
 </head>
+
 <body>
 <form action="/login" method="get">
-  <button>get</button>
+    <button>测试</button>
 </form>
-<form action="/login" method="post">
-    user:<input name="id" type="text">
-    password:<input name="pwd" type="password">
-    <button>post</button>
-</form>
+
 </body>
 </html>

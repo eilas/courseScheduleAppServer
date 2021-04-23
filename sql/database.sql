@@ -46,10 +46,26 @@ create table course_record
     id         int unsigned primary key auto_increment,
     course_id  int unsigned not null,
     student_id varchar(9)   not null,
-    teacher_id int unsigned ,
+    teacher_id int unsigned,
     foreign key course_id_key (course_id) references course (course_id),
     foreign key student_id_key (student_id) references student (student_id),
     foreign key teacher_id_key (teacher_id) references teacher (teacher_id)
 ) engine = InnoDB;
 
-alter table course_record add column additional_info text;
+alter table course_record
+    add column additional_info text;
+
+create table comment
+(
+    id         bigint auto_increment primary key,
+    kid        bigint,
+    pid        bigint       not null,
+    content    text         not null,
+    date       datetime     not null,
+    prize      int unsigned not null,
+
+    course_id  int unsigned not null,
+    student_id varchar(9)   not null,
+    foreign key (course_id) references course (course_id),
+    foreign key (student_id) references student (student_id)
+) engine = InnoDB;

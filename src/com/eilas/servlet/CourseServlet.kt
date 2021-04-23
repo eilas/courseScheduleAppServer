@@ -25,6 +25,10 @@ class CourseServlet : BaseServlet() {
 //                        查询某周全部课程粗略信息
                         val id = jsonParser.parse(it.reader.readLine()).asJsonObject["id"].asString
                         courseDaoImpl.selectAllWeek(id, it.getParameter("week").toInt()).let {
+                            println("全部课程示例时间信息${it.firstOrNull()?.let { 
+                                val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                                format.format(it.strTime1)+"~"+format.format(it.endTime1) 
+                            }}")
                             response.writer.write(gson.toJson(it))
                         }
                     } else if (mode.equals("day")) {

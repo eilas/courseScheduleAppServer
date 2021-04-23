@@ -12,6 +12,8 @@
           <element id="library" level="application" name="mysql-connector-java-8.0.17" />
           <element id="library" level="application" name="com.google.code.gson:gson:2.8.6" />
           <element id="library" level="project" name="commons-pool2-2.9.0" />
+          <element id="library" level="application" name="com.rabbitmq:amqp-client:5.12.0" />
+          <element id="library" level="application" name="org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5" />
         </element>
       </element>
     </root>

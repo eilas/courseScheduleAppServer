@@ -1,7 +1,7 @@
 package com.eilas.dao.impl
 
 import com.eilas.dao.ICourseDao
-import com.eilas.dao.SQLHelperPoolFactory
+import com.eilas.dao.SQLHelpers
 import com.eilas.entity.Course
 import java.sql.Statement
 import java.sql.Timestamp
@@ -10,7 +10,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class CourseDaoImpl : ICourseDao {
-    private val objectPool = SQLHelperPoolFactory.getPool()
+    private val objectPool = SQLHelpers.getPool()
 
     override fun save(course: Course): Int {
 //        println("course:$course")
@@ -136,10 +136,10 @@ class CourseDaoImpl : ICourseDao {
                         if (week % 2 == 0)
                             this.replace("odd_week", "even_week")
                     }).let {
-                    val coureList = ArrayList<Course>()
+                    val courseList = ArrayList<Course>()
                     while (it.next()) {
                         val strWeek = it.getInt(4)
-                        coureList.add(
+                        courseList.add(
                             Course(
                                 id = it.getInt(1),
                                 name = it.getString(2),
@@ -171,7 +171,7 @@ class CourseDaoImpl : ICourseDao {
                     }
 
                     objectPool.returnObject(sqlHelper)
-                    coureList
+                    courseList
                 }
         }
     }
@@ -205,6 +205,6 @@ fun main() {
 //    val time = Calendar.getInstance().time
 //    val course = Course(null, "aaa", "aaa", "aaa", 1, 10, time, time, time, time)
 //    println(courseDaoImpl.save(course))
-    courseDaoImpl.select(11)
-//    courseDaoImpl.selectByNameOrAndLocation("kdkfk", "6461")
+//    courseDaoImpl.select(11)
+    println(courseDaoImpl.selectByNameOrAndLocation("C语言", "b101"))
 }

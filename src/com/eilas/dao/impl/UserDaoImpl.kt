@@ -1,12 +1,12 @@
 package com.eilas.dao.impl
 
 import com.eilas.dao.IUserDao
-import com.eilas.dao.SQLHelperPoolFactory
+import com.eilas.dao.SQLHelpers
 import com.eilas.entity.Student
 import com.eilas.entity.User
 
 class UserDaoImpl : IUserDao {
-    val objectPool = SQLHelperPoolFactory.getPool()
+    val objectPool = SQLHelpers.getPool()
 
     override fun save(user: User) {
         objectPool.borrowObject().apply {
